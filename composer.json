@@ -1,5 +1,10 @@
 {
-    "require": {
-        "symfony/console": "^6.0"
+  "require": {
+    "symfony/console": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Fabpico\\YoutubePlaylistToMp3\\": "src/"
     }
+  }
 }
