@@ -30,7 +30,48 @@ final class DownloadVideosCommand extends Command
         $playlistId = $input->getArgument('playlistId');
         $url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key={$_ENV['API_KEY']}";
         $data = $this->httpClient->get($url);
-        $output->writeln(json_encode($data, JSON_PRETTY_PRINT));
+        $items = $data['items'];
+        $reducedItems = array_map(function (array $item): array {
+            return [
+                'title' => $item['snippet']['title'],
+                'videoId' => $item['snippet']['resourceId']['videoId']
+            ];
+        }, $items);
+
+        $this->downloadVideos($reducedItems, $output);
         return Command::SUCCESS;
+    }
+
+    private function downloadVideos(array $items, OutputInterface $output): void
+    {
+        $itemsCount = count($items);
+        $output->writeln("Downloading videos: $itemsCount");
+        foreach ($items as $item) {
+            $output->writeln("Extracting URL: {$item['title']}");
+            $mp4Url = $this->extractMp4Url($item['videoId']);
+            $output->writeln("Downloading: {$item['title']}");
+            file_put_contents("data/mp4/{$item['title']}.mp4", fopen($mp4Url, 'r'));
+        }
+    }
+
+    private function extractMp4Url(string $videoId): string
+    {
+        $videoUrl = "https://www.youtube.com/watch?v=$videoId}";
+        $content = file_get_contents($videoUrl);
+        $fromBetween = '"formats"';
+        $toBetween = 'video/mp4';
+        $extractingFormatsJson = $this->getStringBetween($fromBetween, $toBetween, $content);
+        $extractingFormatsJson = str_replace('"formats":[', '', $extractingFormatsJson);
+        $extractingFormatsJson = str_replace(',"mimeType":"', '', $extractingFormatsJson) . '}';
+        $extractingFormatsArray = json_decode($extractingFormatsJson, true);
+        return $extractingFormatsArray['url'];
+    }
+
+    private function getStringBetween(string $from, string $to, string $haystack): string
+    {
+        $fromPosition = strpos($haystack, $from);
+        $toPosition = strpos($haystack, $to, $fromPosition);
+        $betweenLength = $toPosition - $fromPosition;
+        return substr($haystack, $fromPosition, $betweenLength);
     }
 }

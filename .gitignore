@@ -2,3 +2,4 @@
 vendor
 .env
 php.ini
+data/mp4/*
