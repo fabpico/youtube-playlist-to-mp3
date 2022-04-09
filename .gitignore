@@ -3,3 +3,4 @@ vendor
 .env
 php.ini
 data/mp4/*
+data/mp3/*

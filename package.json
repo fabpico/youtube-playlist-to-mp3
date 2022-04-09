@@ -7,6 +7,7 @@
     "restart": "yarn stop && yarn start",
     "bash": "docker-compose exec php bash",
     "install-packages": "docker-compose exec php bash -c \"composer install\"",
-    "download-videos": "docker-compose exec php bash -c \"php cli.php fabpico:download-videos foo\""
+    "download-videos": "docker-compose exec php bash -c \"php cli.php fabpico:download-videos foo\"",
+    "convert-mp4-to-mp3": "docker-compose exec php bash -c \"php cli.php fabpico:convert-mp4-to-mp3\""
   }
 }
