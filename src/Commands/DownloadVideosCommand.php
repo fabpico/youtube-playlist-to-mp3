@@ -47,15 +47,17 @@ final class DownloadVideosCommand extends Command
         $itemsCount = count($items);
         $output->writeln("Downloading videos: $itemsCount");
         foreach ($items as $item) {
-            $path = "data/mp4/{$item['title']}.mp4";
+            $title = $item['title'];
+            $sanitizedTitle = str_replace('/', '-', $title);
+            $path = "data/mp4/{$sanitizedTitle}.mp4";
             if (file_exists($path)) {
-                $output->writeln("Skip [file exists]: {$item['title']}");
+                $output->writeln("Skip [file exists]: {$sanitizedTitle}");
                 continue;
             }
 
-            $output->writeln("Extracting URL: {$item['title']}");
+            $output->writeln("Extracting URL: {$sanitizedTitle}");
             $mp4Url = $this->extractMp4Url($item['videoId']);
-            $output->writeln("Downloading: {$item['title']}");
+            $output->writeln("Downloading: {$sanitizedTitle}");
             file_put_contents($path, fopen($mp4Url, 'r'));
         }
     }
