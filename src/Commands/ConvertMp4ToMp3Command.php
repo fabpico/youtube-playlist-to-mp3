@@ -29,7 +29,7 @@ final class ConvertMp4ToMp3Command extends Command
                 continue;
             }
             $output->writeln("Converting: {$filename}");
-            exec("ffmpeg -i '$mp4Path' '$mp3Path'");
+            exec("ffmpeg -i \"$mp4Path\" \"$mp3Path\"");
         }
         return Command::SUCCESS;
     }
