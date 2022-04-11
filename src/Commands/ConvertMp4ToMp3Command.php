@@ -24,9 +24,14 @@ final class ConvertMp4ToMp3Command extends Command
             $filename = $pathInfo['filename'];
             $mp4Path = "data/mp4/$filename.mp4";
             $mp3Path = "data/mp3/$filename.mp3";
+            if (file_exists($mp3Path)) {
+                $output->writeln("Skip [already done]: {$filename}");
+                continue;
+            }
+            $output->writeln("Converting: {$filename}");
             exec("ffmpeg -i '$mp4Path' '$mp3Path'");
         }
         return Command::SUCCESS;
     }
-    
+
 }
