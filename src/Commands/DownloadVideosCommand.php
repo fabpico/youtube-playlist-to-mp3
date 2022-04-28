@@ -64,22 +64,9 @@ final class DownloadVideosCommand extends Command
 
     private function extractMp4Url(string $videoId): string
     {
-        $videoUrl = "https://www.youtube.com/watch?v=$videoId}";
-        $content = file_get_contents($videoUrl);
-        $fromBetween = '"formats"';
-        $toBetween = 'video/mp4';
-        $extractingFormatsJson = $this->getStringBetween($fromBetween, $toBetween, $content);
-        $extractingFormatsJson = str_replace('"formats":[', '', $extractingFormatsJson);
-        $extractingFormatsJson = str_replace(',"mimeType":"', '', $extractingFormatsJson) . '}';
-        $extractingFormatsArray = json_decode($extractingFormatsJson, true);
-        return $extractingFormatsArray['url'];
-    }
-
-    private function getStringBetween(string $from, string $to, string $haystack): string
-    {
-        $fromPosition = strpos($haystack, $from);
-        $toPosition = strpos($haystack, $to, $fromPosition);
-        $betweenLength = $toPosition - $fromPosition;
-        return substr($haystack, $fromPosition, $betweenLength);
+        $videoUrl = "https://www.youtube.com/watch?v=$videoId";
+        $output = [];
+        exec("youtube-dl --get-url $videoUrl", $output);
+        return $output[1]; // index 0 url is a video without audio
     }
 }
