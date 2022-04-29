@@ -30,7 +30,7 @@ final class ConvertCommand extends Command
         $playlistId = $input->getArgument('playlistId');
         $playlistItems = $this->getPlaylistItems($playlistId);
         $itemsCount = count($playlistItems);
-        $output->writeln("Items count: $itemsCount");
+        $this->log("Items count: $itemsCount", $output);
         foreach ($playlistItems as $playlistItem) {
             $this->convertItem($playlistItem, $output);
         }
@@ -64,11 +64,11 @@ final class ConvertCommand extends Command
     private function convertItem(array $playlistItem, OutputInterface $output): void
     {
         $title = $playlistItem['title'];
-        $output->writeln("Process \"$title\"..");
+        $this->log("Process \"$title\"..", $output);
         $sanitizedTitle = str_replace('/', '-', $title);
         $targetPath = "data/mp3/{$sanitizedTitle}.mp3";
         if (file_exists($targetPath)) {
-            $output->writeln("Skip. Mp3 exists.");
+            $this->log("Skip. Mp3 exists.", $output);
             return;
         }
         $videoDownloadPath = sys_get_temp_dir() . "/{$sanitizedTitle}.mp4";
@@ -80,17 +80,17 @@ final class ConvertCommand extends Command
 
     private function downloadVideo(string $videoId, string $videoDownloadPath, OutputInterface $output): void
     {
-        $output->writeln("Extract video URL..");
+        $this->log("Extract video URL..", $output);
         $mp4Url = $this->extractMp4Url($videoId);
-        $output->writeln("Downloading video ..");
+        $this->log("Downloading video ..", $output);
         file_put_contents($videoDownloadPath, fopen($mp4Url, 'r'));
     }
 
     private function convert(string $videoDownloadPath, string $targetPath, OutputInterface $output): void
     {
-        $output->writeln("Converting..");
+        $this->log("Converting..", $output);
         exec("ffmpeg -loglevel error -i \"$videoDownloadPath\" \"$targetPath\"");
-        $output->writeln("Converted.");
+        $this->log("Converted.", $output);
     }
 
     private function extractMp4Url(string $videoId): string
@@ -99,5 +99,11 @@ final class ConvertCommand extends Command
         $output = [];
         exec("youtube-dl --get-url $videoUrl", $output);
         return $output[1]; // index 0 url is a video without audio
+    }
+
+    private function log(string $message, OutputInterface $output): void
+    {
+        $time = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
+        $output->writeln("[$time] $message");
     }
 }
