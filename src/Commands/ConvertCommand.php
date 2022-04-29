@@ -61,14 +61,23 @@ final class ConvertCommand extends Command
             $output->writeln("Skip. Mp3 exists.");
             return;
         }
-        $output->writeln("Extract video URL..");
-        $mp4Url = $this->extractMp4Url($playlistItem['videoId']);
         $videoDownloadPath = sys_get_temp_dir() . "/{$sanitizedTitle}.mp4";
+        $this->downloadVideo($playlistItem['videoId'], $videoDownloadPath, $output);
+        $this->convert($videoDownloadPath, $targetPath, $output);
+    }
+
+    private function downloadVideo(string $videoId, string $videoDownloadPath, OutputInterface $output): void
+    {
+        $output->writeln("Extract video URL..");
+        $mp4Url = $this->extractMp4Url($videoId);
         $output->writeln("Downloading video ..");
         file_put_contents($videoDownloadPath, fopen($mp4Url, 'r'));
+    }
 
+    private function convert(string $videoDownloadPath, string $targetPath, OutputInterface $output): void
+    {
         $output->writeln("Converting..");
-        exec("ffmpeg -i -loglevel error \"$videoDownloadPath\" \"$targetPath\"");
+        exec("ffmpeg -i \"$videoDownloadPath\" \"$targetPath\"");
         $output->writeln("Converted.");
     }
 
