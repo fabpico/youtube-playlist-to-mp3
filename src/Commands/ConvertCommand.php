@@ -79,7 +79,7 @@ final class ConvertCommand extends Command
     private function convert(string $videoDownloadPath, string $targetPath, OutputInterface $output): void
     {
         $output->writeln("Converting..");
-        exec("ffmpeg -i \"$videoDownloadPath\" \"$targetPath\"");
+        exec("ffmpeg -loglevel error -i \"$videoDownloadPath\" \"$targetPath\"");
         $output->writeln("Converted.");
     }
 
