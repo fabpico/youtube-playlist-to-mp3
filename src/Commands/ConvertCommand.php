@@ -37,18 +37,28 @@ final class ConvertCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function getPlaylistItems(string $playlistId): array
+    private function getPlaylistItems(string $playlistId, string $pageToken = null): array
     {
-        $playlistUrl = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key={$_ENV['API_KEY']}";
+        $apiFilters = http_build_query([
+            'part' => 'snippet',
+            'maxResults' => 50, // is the maximum for one call
+            'playlistId' => $playlistId,
+            'key' => $_ENV['API_KEY'],
+            'pageToken' => $pageToken,
+        ]);
+        $playlistUrl = "https://www.googleapis.com/youtube/v3/playlistItems?$apiFilters";
         $playlistResponse = $this->httpClient->get($playlistUrl);
-        $playlistItems = $playlistResponse['items'];
-        $reducedPlaylistItems = array_map(function (array $item): array {
+        $recursivePlaylistItems = array_key_exists('nextPageToken', $playlistResponse) ?
+            $this->getPlaylistItems($playlistId, $playlistResponse['nextPageToken']) :
+            [];
+
+        $playlistItems = array_map(function (array $item): array {
             return [
                 'title' => $item['snippet']['title'],
                 'videoId' => $item['snippet']['resourceId']['videoId']
             ];
-        }, $playlistItems);
-        return $reducedPlaylistItems;
+        }, $playlistResponse['items']);
+        return array_merge($playlistItems, $recursivePlaylistItems);
     }
 
     private function convertItem(array $playlistItem, OutputInterface $output): void
