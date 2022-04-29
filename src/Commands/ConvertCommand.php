@@ -62,7 +62,9 @@ final class ConvertCommand extends Command
             return;
         }
         $videoDownloadPath = sys_get_temp_dir() . "/{$sanitizedTitle}.mp4";
-        $this->downloadVideo($playlistItem['videoId'], $videoDownloadPath, $output);
+        if (!file_exists($videoDownloadPath)) {
+            $this->downloadVideo($playlistItem['videoId'], $videoDownloadPath, $output);
+        }
         $this->convert($videoDownloadPath, $targetPath, $output);
     }
 
