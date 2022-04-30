@@ -67,11 +67,11 @@ final class ConvertCommand extends Command
         $this->log("Process \"$title\"..", $output);
         $sanitizedTitle = str_replace('/', '-', $title);
         $targetPath = "data/mp3/{$sanitizedTitle}.mp3";
+        $videoDownloadPath = "data/mp4/{$sanitizedTitle}.mp4";
         if (file_exists($targetPath)) {
             $this->log("Skip. Mp3 exists.", $output);
             return;
         }
-        $videoDownloadPath = sys_get_temp_dir() . "/{$sanitizedTitle}.mp4";
         if (!file_exists($videoDownloadPath)) {
             $this->downloadVideo($playlistItem['videoId'], $videoDownloadPath, $output);
         }
