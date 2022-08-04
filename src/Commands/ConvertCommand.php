@@ -82,6 +82,10 @@ final class ConvertCommand extends Command
     {
         $this->log("Extract video URL..", $output);
         $mp4Url = $this->extractMp4Url($videoId);
+        if (!$mp4Url) {
+            $this->log("Video URL could not be extracted.", $output);
+            return;
+        }
         $this->log("Downloading video ..", $output);
         file_put_contents($videoDownloadPath, fopen($mp4Url, 'r'));
     }
@@ -93,11 +97,14 @@ final class ConvertCommand extends Command
         $this->log("Converted.", $output);
     }
 
-    private function extractMp4Url(string $videoId): string
+    private function extractMp4Url(string $videoId): ?string
     {
         $videoUrl = "https://www.youtube.com/watch?v=$videoId";
         $output = [];
         exec("youtube-dl --get-url $videoUrl", $output);
+        if (!array_key_exists(1, $output)) {
+            return null;
+        }
         return $output[1]; // index 0 url is a video without audio
     }
 
