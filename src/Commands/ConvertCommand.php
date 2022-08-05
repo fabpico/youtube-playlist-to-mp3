@@ -61,11 +61,18 @@ final class ConvertCommand extends Command
         return array_merge($playlistItems, $recursivePlaylistItems);
     }
 
+    private function sanitizeTitle(string $title): string
+    {
+        $title = str_replace('/', '-', $title);
+        $title = str_replace('$', '', $title);
+        return $title;
+    }
+
     private function convertItem(array $playlistItem, OutputInterface $output): void
     {
         $title = $playlistItem['title'];
         $this->log("Process \"$title\"..", $output);
-        $sanitizedTitle = str_replace('/', '-', $title);
+        $sanitizedTitle = $this->sanitizeTitle($title);
         $targetPath = "data/mp3/{$sanitizedTitle}.mp3";
         $videoDownloadPath = "data/mp4/{$sanitizedTitle}.mp4";
         if (file_exists($targetPath)) {
