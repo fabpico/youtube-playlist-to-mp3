@@ -1,17 +1,22 @@
-# Youtube playlist to mp3
+# YouTube playlist to mp3
 
-## Set up
+Download YouTube videos as mp3 files.
 
-1. Create a Google API key, and put it in `.env` (see `.env.sample`)
-2. Install Docker
-3. Build container: Run `docker-compose build`
-4. Start container: Run `docker-compose up -d`
-5. Bash into PHP: Run `docker-compose exec php bash`
-6. Install PHP packages: In bash, run `composer install`
+## Requirements
 
-## Usage
+- Docker
+- [Google API key](https://cloud.google.com/docs/authentication/api-keys#create)
+- A public YouTube playlist ID (found in the URL like https://www.youtube.com/playlist?list={playlistId})
 
-1. Bash into PHP: Run `docker-compose exec php bash`
-2. In bash: Run `php cli.php fabpico:convert [playlistId]`
+## Install
+
+1. Put your Google API key into `.env` (see `.env.sample`)
+2. Open PHP terminal: `docker compose up -d`,  `docker compose exec php bash`
+3. Install PHP packages: `composer install`
+
+## Use
+
+1. Open PHP terminal: `docker compose up -d`,  `docker compose exec php bash`
+2. Execute: `php cli.php fabpico:convert [playlistId]`
 
 Your mp3 files will be located in `./data/mp3`.
