@@ -66,6 +66,7 @@ final class ConvertCommand extends Command
         $title = str_replace('/', '-', $title);
         $title = str_replace('$', '', $title);
         $title = str_replace('"', "'", $title);
+        $title = str_replace(':', ' -', $title);
         return $title;
     }
 
