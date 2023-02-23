@@ -109,7 +109,7 @@ final class ConvertCommand extends Command
     {
         $videoUrl = "https://www.youtube.com/watch?v=$videoId";
         $output = [];
-        exec("youtube-dl --get-url $videoUrl", $output);
+        exec("yt-dlp --get-url $videoUrl", $output);
         if (!array_key_exists(1, $output)) {
             return null;
         }
