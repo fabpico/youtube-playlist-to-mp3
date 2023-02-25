@@ -77,26 +77,30 @@ final class ConvertCommand extends Command
         $sanitizedTitle = $this->sanitizeTitle($title);
         $targetPath = "data/mp3/{$sanitizedTitle}.mp3";
         $videoDownloadPath = "data/mp4/{$sanitizedTitle}.mp4";
+        $wasDownloaded = false;
         if (file_exists($targetPath)) {
             $this->log("Skip. Mp3 exists.", $output);
             return;
         }
         if (!file_exists($videoDownloadPath)) {
-            $this->downloadVideo($playlistItem['videoId'], $videoDownloadPath, $output);
+            $wasDownloaded = $this->downloadVideo($playlistItem['videoId'], $videoDownloadPath, $output);
         }
-        $this->convert($videoDownloadPath, $targetPath, $output);
+        if ($wasDownloaded) {
+            $this->convert($videoDownloadPath, $targetPath, $output);
+        }
     }
 
-    private function downloadVideo(string $videoId, string $videoDownloadPath, OutputInterface $output): void
+    private function downloadVideo(string $videoId, string $videoDownloadPath, OutputInterface $output): bool
     {
         $this->log("Extract video URL..", $output);
         $mp4Url = $this->extractMp4Url($videoId);
         if (!$mp4Url) {
             $this->log("Video URL could not be extracted.", $output);
-            return;
+            return false;
         }
         $this->log("Downloading video ..", $output);
         file_put_contents($videoDownloadPath, fopen($mp4Url, 'r'));
+        return true;
     }
 
     private function convert(string $videoDownloadPath, string $targetPath, OutputInterface $output): void
