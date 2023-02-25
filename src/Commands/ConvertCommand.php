@@ -115,10 +115,8 @@ final class ConvertCommand extends Command
         $videoUrl = "https://www.youtube.com/watch?v=$videoId";
         $output = [];
         exec("yt-dlp --get-url $videoUrl", $output);
-        if (!array_key_exists(1, $output)) {
-            return null;
-        }
-        return $output[1]; // index 0 url is a video without audio
+        $withAudioUrl = $output[1] ?? $output[0];
+        return $withAudioUrl;
     }
 
     private function log(string $message, OutputInterface $output): void
