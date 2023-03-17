@@ -5,8 +5,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN apk add $PHPIZE_DEPS
 RUN pecl install xdebug-3.1.4 && docker-php-ext-enable xdebug
 
+# Install youtube downloader
 RUN apk add python3
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
 RUN chmod a+rx /usr/local/bin/yt-dlp
 
-RUN apk add ffmpeg
+RUN apk add ffmpeg # for convert
