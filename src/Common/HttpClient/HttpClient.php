@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Fabpico\YoutubePlaylistToMp3\Common\Httpclient;
+namespace Fabpico\YoutubePlaylistToMp3\Common\HttpClient;
 
 interface HttpClient
 {

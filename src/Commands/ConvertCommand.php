@@ -2,7 +2,7 @@
 
 namespace Fabpico\YoutubePlaylistToMp3\Commands;
 
-use Fabpico\YoutubePlaylistToMp3\Common\Httpclient\HttpClient;
+use Fabpico\YoutubePlaylistToMp3\Common\HttpClient\HttpClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

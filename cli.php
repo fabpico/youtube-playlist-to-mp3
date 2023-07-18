@@ -4,7 +4,7 @@ require './vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpClient\CurlHttpClient as SymfonyCurlHttpClient;
-use Fabpico\YoutubePlaylistToMp3\Common\Httpclient\CurlHttpClient;
+use Fabpico\YoutubePlaylistToMp3\Common\HttpClient\CurlHttpClient;
 use Fabpico\YoutubePlaylistToMp3\Commands\ConvertCommand;
 
 $application = new Application();
