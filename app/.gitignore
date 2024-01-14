@@ -1,0 +1,5 @@
+vendor
+data/mp4/*
+!data/mp4/.gitkeep
+data/mp3/*
+!data/mp3/.gitkeep

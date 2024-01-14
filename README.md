@@ -11,7 +11,7 @@ Download YouTube videos as mp3 files.
 
 ## Install
 
-1. Put your Google API key into `.env` (see `.env.sample`)
+1. Add `./app/.env` (see `./app/.env.sample`)
 2. Bash into the container `docker compose up -d`, `docker compose exec php sh`
 3. Install packages `composer install`
 
